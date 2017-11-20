@@ -19,7 +19,7 @@
  * along with this project.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package Algorithm;
+package TP2And3.Algorithm;
 
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.doublealgo.Statistic;

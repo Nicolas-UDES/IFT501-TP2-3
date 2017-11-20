@@ -18,13 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this project.  If not, see <http://www.gnu.org/licenses/>.
  */
-package Algorithm;
+package TP2And3.Algorithm;
 
 import cern.colt.matrix.DoubleMatrix2D;
+import org.apache.commons.math3.random.RandomGenerator;
 
-public interface ClusterAlgorithm {
+public interface PartitionGenerator {
 
-	void cluster(DoubleMatrix2D data, int clusters);
+	void generate(DoubleMatrix2D partition);
 
-	DoubleMatrix2D getPartition();
+	void setRandomGenerator(RandomGenerator randomGenerator);
 }

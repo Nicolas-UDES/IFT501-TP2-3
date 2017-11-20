@@ -18,14 +18,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this project.  If not, see <http://www.gnu.org/licenses/>.
  */
-package Algorithm;
+package TP2And3.Algorithm;
 
 import cern.colt.matrix.DoubleMatrix2D;
+import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 
-public interface PartitionGenerator {
+public class FuzzyRandomPartitionGenerator implements PartitionGenerator {
 
-	void generate(DoubleMatrix2D partition);
+	private RandomGenerator randomGenerator;
 
-	void setRandomGenerator(RandomGenerator randomGenerator);
+	public FuzzyRandomPartitionGenerator() {
+		randomGenerator = new MersenneTwister();
+	}
+
+	@Override
+	public void generate(DoubleMatrix2D partition) {
+		for (int i = 0; i < partition.rows(); ++i) {
+			// Randomise
+			double sum = 0;
+			for (int k = 0; k < partition.columns(); ++k) {
+				double u = randomGenerator.nextDouble();
+				partition.setQuick(i, k, u);
+				sum += u;
+			}
+
+			// Normalise the weights
+			for (int k = 0; k < partition.columns(); ++k) {
+				partition.setQuick(i, k, partition.getQuick(i, k) / sum);
+			}
+		}
+	}
+
+	public RandomGenerator getRandomGenerator() {
+		return randomGenerator;
+	}
+
+	@Override
+	public void setRandomGenerator(RandomGenerator random) {
+		this.randomGenerator = random;
+	}
 }
