@@ -34,7 +34,7 @@ public class FuzzyCMeans implements ClusterAlgorithm {
 	private DoubleMatrix2D means;
 	private DoubleMatrix2D partition;
 	private double fuzzification = 2.0;
-	private double epsilon = 1e-7;
+	private double epsilon = 1e-7; //-7
 	private int maxIterations = 1000;
 	private RandomGenerator randomGenerator = new MersenneTwister();
 	private PartitionGenerator partitionGenerator = new FuzzyRandomPartitionGenerator();
@@ -56,10 +56,13 @@ public class FuzzyCMeans implements ClusterAlgorithm {
 
 		// Begin the main loop of alternating optimization
 		double stepSize = epsilon;
+		//4 - Test de convergence
 		for (int itr = 0; itr < maxIterations && stepSize >= epsilon; ++itr) {
+			System.out.println("0 - Iteration: " + itr + " stepSize: " + stepSize);
 			// Get new prototypes (v) for each cluster using weighted median
+			//3 Mise a jour des centres des clusters
 			for (int k = 0; k < clusters; k++) {
-
+				System.out.println("3 - Iteration: " + itr + " k: " + k);
 				for (int j = 0; j < p; j++) {
 					double sumWeight = 0;
 					double sumValue = 0;
@@ -78,6 +81,7 @@ public class FuzzyCMeans implements ClusterAlgorithm {
 			DoubleMatrix2D distances = new DenseDoubleMatrix2D(n, clusters);
 			for (int k = 0; k < clusters; k++) {
 				for (int i = 0; i < n; i++) {
+					System.out.println("D - Iteration: " + itr + " k: " + k + " i: " + i);
 					// Euclidean distance calculation
 					double distance = distanceMeasure.apply(means.viewColumn(k), data.viewRow(i));
 					distances.setQuick(i, k, distance);
@@ -85,8 +89,10 @@ public class FuzzyCMeans implements ClusterAlgorithm {
 			}
 
 			// Get new partition matrix U:
+			//2 - Mise a jour des degres d'appartenance
 			stepSize = 0;
 			for (int k = 0; k < clusters; k++) {
+				System.out.println("2 - Iteration: " + itr + " k: " + k);
 				for (int i = 0; i < n; i++) {
 					double u = 0;
 
@@ -106,6 +112,7 @@ public class FuzzyCMeans implements ClusterAlgorithm {
 					double u0 = partition.getQuick(i, k);
 					partition.setQuick(i, k, u);
 
+					//4 - Calcul pour le test d'appartenance
 					// Stepsize is max(delta(U))
 					if (u - u0 > stepSize) {
 						stepSize = u - u0;
